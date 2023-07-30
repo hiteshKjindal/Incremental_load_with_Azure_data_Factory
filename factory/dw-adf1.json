@@ -1,0 +1,9 @@
+{
+	"name": "dw-adf1",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0bd9c492-2544-497e-a1d6-5947880ead5f",
+		"tenantId": "fd37f915-70b3-4af8-be11-8b75fb462118"
+	}
+}
