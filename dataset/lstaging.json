@@ -1,0 +1,112 @@
+{
+	"name": "lstaging",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "VendorID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "tpep_pickup_datetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "tpep_dropoff_datetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "passenger_count",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "trip_distance",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "pickup_longitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "pickup_latitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "RatecodeID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "store_and_fwd_flag",
+				"type": "varchar"
+			},
+			{
+				"name": "dropoff_longitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "dropoff_latitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "payment_type",
+				"type": "varchar"
+			},
+			{
+				"name": "fare_amount",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "extra",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "mta_tax",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "tip_amount",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "tolls_amount",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "improvement_surcharge",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "total_amount",
+				"type": "float",
+				"precision": 15
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ride_staging"
+		}
+	}
+}
