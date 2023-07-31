@@ -1,0 +1,100 @@
+{
+	"name": "ride_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "uber_data.csv",
+				"container": "sourceride"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "VendorID",
+				"type": "int"
+			},
+			{
+				"name": "tpep_pickup_datetime",
+				"type": "datetime"
+			},
+			{
+				"name": "tpep_dropoff_datetime",
+				"type": "datetime"
+			},
+			{
+				"name": "passenger_count",
+				"type": "int"
+			},
+			{
+				"name": "trip_distance",
+				"type": "String"
+			},
+			{
+				"name": "pickup_longitude",
+				"type": "float"
+			},
+			{
+				"name": "pickup_latitude",
+				"type": "float"
+			},
+			{
+				"name": "RatecodeID",
+				"type": "int"
+			},
+			{
+				"name": "store_and_fwd_flag",
+				"type": "String"
+			},
+			{
+				"name": "dropoff_longitude",
+				"type": "float"
+			},
+			{
+				"name": "dropoff_latitude",
+				"type": "float"
+			},
+			{
+				"name": "payment_type",
+				"type": "String"
+			},
+			{
+				"name": "fare_amount",
+				"type": "float"
+			},
+			{
+				"name": "extra",
+				"type": "float"
+			},
+			{
+				"name": "mta_tax",
+				"type": "float"
+			},
+			{
+				"name": "tip_amount",
+				"type": "float"
+			},
+			{
+				"name": "tolls_amount",
+				"type": "float"
+			},
+			{
+				"name": "improvement_surcharge",
+				"type": "float"
+			},
+			{
+				"name": "total_amount",
+				"type": "float"
+			}
+		]
+	}
+}
