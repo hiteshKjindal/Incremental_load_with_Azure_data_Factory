@@ -1,0 +1,411 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dw-adf1"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/lstaging')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "VendorID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "tpep_pickup_datetime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "tpep_dropoff_datetime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "passenger_count",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "trip_distance",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "pickup_longitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "pickup_latitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "RatecodeID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "store_and_fwd_flag",
+						"type": "varchar"
+					},
+					{
+						"name": "dropoff_longitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "dropoff_latitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "payment_type",
+						"type": "varchar"
+					},
+					{
+						"name": "fare_amount",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "extra",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "mta_tax",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "tip_amount",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "tolls_amount",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "improvement_surcharge",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "total_amount",
+						"type": "float",
+						"precision": 15
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ride_staging"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ride_data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "uber_data.csv",
+						"container": "sourceride"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "VendorID",
+						"type": "int"
+					},
+					{
+						"name": "tpep_pickup_datetime",
+						"type": "datetime"
+					},
+					{
+						"name": "tpep_dropoff_datetime",
+						"type": "datetime"
+					},
+					{
+						"name": "passenger_count",
+						"type": "int"
+					},
+					{
+						"name": "trip_distance",
+						"type": "String"
+					},
+					{
+						"name": "pickup_longitude",
+						"type": "float"
+					},
+					{
+						"name": "pickup_latitude",
+						"type": "float"
+					},
+					{
+						"name": "RatecodeID",
+						"type": "int"
+					},
+					{
+						"name": "store_and_fwd_flag",
+						"type": "String"
+					},
+					{
+						"name": "dropoff_longitude",
+						"type": "float"
+					},
+					{
+						"name": "dropoff_latitude",
+						"type": "float"
+					},
+					{
+						"name": "payment_type",
+						"type": "String"
+					},
+					{
+						"name": "fare_amount",
+						"type": "float"
+					},
+					{
+						"name": "extra",
+						"type": "float"
+					},
+					{
+						"name": "mta_tax",
+						"type": "float"
+					},
+					{
+						"name": "tip_amount",
+						"type": "float"
+					},
+					{
+						"name": "tolls_amount",
+						"type": "float"
+					},
+					{
+						"name": "improvement_surcharge",
+						"type": "float"
+					},
+					{
+						"name": "total_amount",
+						"type": "float"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwproject')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "staging_load",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ride_data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "lstaging",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "dwh_design",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "staging_load",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "CREATE TABLE datetime_dim (\r\n  datetime_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  tpep_pickup_datetime DATETIME,\r\n  tpep_dropoff_datetime DATETIME,\r\n  pick_day AS DAY(tpep_pickup_datetime) PERSISTED,\r\n  pick_monmth AS MONTH(tpep_pickup_datetime) PERSISTED,\r\n  pick_year AS YEAR(tpep_pickup_datetime) PERSISTED,\r\n  drop_day AS DAY(tpep_dropoff_datetime) PERSISTED,\r\n  drop_monmth AS MONTH(tpep_dropoff_datetime) PERSISTED,\r\n  drop_year AS YEAR(tpep_dropoff_datetime) PERSISTED,\r\n  drop_weekday AS DATENAME(weekday, tpep_dropoff_datetime),\r\n  pick_weekday AS DATENAME(weekday, tpep_pickup_datetime),\r\n  pick_hour AS DATEPART(hour, tpep_pickup_datetime) PERSISTED,\r\n  drop_hour AS DATEPART(hour, tpep_dropoff_datetime) PERSISTED\r\n);\r\n\r\n\r\nINSERT INTO datetime_dim (tpep_pickup_datetime, tpep_dropoff_datetime)\r\nSELECT DISTINCT tpep_pickup_datetime, tpep_dropoff_datetime\r\nFROM ride_staging;\r\n\r\n\r\nCREATE TABLE passanger_count_dim (\r\n  passanger_count_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  passanger_count INT\r\n);\r\n\r\n\r\nINSERT INTO passanger_count_dim (passanger_count)\r\nSELECT DISTINCT passenger_count\r\nFROM ride_staging;\r\n\r\n\r\n\r\nCREATE TABLE trip_distance_dim (\r\n  trip_distance_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  trip_distance FLOAT\r\n);\r\n\r\n\r\nINSERT INTO trip_distance_dim (trip_distance)\r\nSELECT DISTINCT trip_distance\r\nFROM ride_staging;\r\n\r\n\r\nCREATE TABLE rate_code_dim (\r\n  rate_code_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  rate_code VARCHAR(50),\r\n  rate_code_name VARCHAR(100) \r\n);\r\n\r\n\r\nINSERT INTO rate_code_dim (rate_code)\r\nSELECT DISTINCT ratecodeID\r\nFROM ride_staging;\r\n\r\n\r\nCREATE TABLE pickup_location_dim (\r\n  pickup_location_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  pickup_latitude FLOAT,\r\n  pickup_longitude FLOAT\r\n);\r\n\r\nINSERT INTO pickup_location_dim (pickup_latitude, pickup_longitude)\r\nSELECT DISTINCT pickup_latitude, pickup_longitude\r\nFROM ride_staging;\r\n\r\nCREATE TABLE drop_location_dim (\r\n  drop_location_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  dropoff_latitude FLOAT,\r\n  dropoff_longitude FLOAT\r\n);\r\n\r\n\r\nINSERT INTO drop_location_dim (dropoff_latitude, dropoff_longitude)\r\nSELECT DISTINCT dropoff_latitude, dropoff_longitude\r\nFROM ride_staging;\r\n\r\nCREATE TABLE payment_type_dim (\r\n  payment_type_id INT IDENTITY(1,1) PRIMARY KEY,\r\n  payment_type INT,\r\n  payment_type_name VARCHAR(100) \r\n);\r\n\r\nINSERT INTO payment_type_dim (payment_type)\r\nSELECT DISTINCT payment_type\r\nFROM ride_staging;\r\n\r\n\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.datetime_id = d.datetime_id\r\nFROM datetime_dim d\r\nWHERE ride_staging.tpep_pickup_datetime = d.tpep_pickup_datetime\r\n  AND ride_staging.tpep_dropoff_datetime = d.tpep_dropoff_datetime;\r\n\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.passanger_count_id = d.passanger_count_id\r\nFROM passanger_count_dim d\r\nWHERE ride_staging.passenger_count = d.passanger_count;\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.trip_distance_id = d.trip_distance_id\r\nFROM trip_distance_dim d\r\nWHERE ride_staging.trip_distance = d.trip_distance;\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.rate_code_id = d.rate_code_id\r\nFROM rate_code_dim d\r\nWHERE ride_staging.ratecodeID = d.rate_code;\r\n\r\nUPDATE ride_staging\r\nSET ride_staging.pickup_location_id = d.pickup_location_id\r\nFROM pickup_location_dim d\r\nWHERE ride_staging.pickup_latitude = d.pickup_latitude\r\n  AND ride_staging.pickup_longitude = d.pickup_longitude;\r\n\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.drop_location_id = d.drop_location_id\r\nFROM drop_location_dim d\r\nWHERE ride_staging.dropoff_latitude = d.dropoff_latitude\r\n  AND ride_staging.dropoff_longitude = d.dropoff_longitude;\r\n\r\nUPDATE ride_staging \r\nSET ride_staging.payment_type_id = d.payment_type_id\r\nFROM payment_type_dim d\r\nWHERE ride_staging.payment_type = d.payment_type;\r\n\r\n\r\nSELECT \r\n    vendorID,\r\n    datetime_id,\r\n    passanger_count_id,\r\n    trip_distance_id,\r\n    pickup_location_id,\r\n    drop_location_id,\r\n    rate_code_id,\r\n    payment_type_id,\r\n    fare_amount,\r\n    extra,\r\n    mta_tax,\r\n    tip_amount,\r\n    tolls_amount,\r\n    improvement_surcharge,\r\n    total_amount,\r\n    IDENTITY(int, 1, 1) AS ride_id\r\n  INTO ride_fact  \r\nFROM ride_staging;\r\n"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "trunc on failure",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "dwh_design",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "truncate table ride_staging"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ride_data')]",
+				"[concat(variables('factoryId'), '/datasets/lstaging')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		}
+	]
+}
