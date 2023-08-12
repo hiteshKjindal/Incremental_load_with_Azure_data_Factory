@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page",
+			"url": "https://d37ci6vzurychx.cloudfront.net",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
